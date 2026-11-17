@@ -162,7 +162,7 @@
   function initMesh() {
     if (fmReady) return fmReady;
     fmReady = (async () => {
-      fm = new FaceMesh({ locateFile: (f) => 'vendor/face_mesh/' + f });
+      fm = new FaceMesh({ locateFile: (f) => f });
       fm.setOptions({ maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.6, minTrackingConfidence: 0.6 });
       fm.onResults(onResults);
       await fm.initialize();
