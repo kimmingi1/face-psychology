@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>상(相) 역학원 · 관상 심리전</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="css/sang.css">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="mark">相</div>
+    <div class="brand">상(相) 역학원<small>관상 심리전</small></div>
+    <div class="dots" id="dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <button class="home" id="btn-home" type="button">처음으로</button>
+  </header>
+
+  <main class="stage">
+    <!-- 0. 시작 -->
+    <section class="screen" id="s-start" data-dot="0">
+      <div class="seal">相</div>
+      <h1>관상 심리전</h1>
+      <p class="sub">두 분이 마주 앉아, 서로의 관상을 단서로<br>상대의 마음을 맞혀 보세요.</p>
+      <button class="btn" id="btn-start" type="button">시작하기</button>
+      <p class="tiny">두 사람이 함께 하는 게임이에요. 약 4분 걸려요.</p>
+    </section>
+
+    <!-- 1. 두 사람 -->
+    <section class="screen" id="s-pair" data-dot="1">
+      <p class="kicker">接 受</p>
+      <h2>두 분은 어떤 사이인가요?</h2>
+      <div class="choices" id="rel-choices">
+        <button class="choice" type="button" data-rel="stranger">처음 보는 사이<small>오늘 처음 만났어요</small></button>
+        <button class="choice" type="button" data-rel="friend">아는 사이<small>이미 서로 알고 있어요</small></button>
+      </div>
+      <div class="names">
+        <label>왼쪽 분 이름 (안 써도 돼요)<input id="name0" maxlength="8" placeholder="甲 손님" autocomplete="off"></label>
+        <label>오른쪽 분 이름 (안 써도 돼요)<input id="name1" maxlength="8" placeholder="乙 손님" autocomplete="off"></label>
+      </div>
+      <p class="tiny">이름은 이 화면 안에서만 쓰고, 저장하거나 통계에 올리지 않아요.</p>
+      <button class="btn" id="btn-pair" type="button" disabled>다 음</button>
+    </section>
+
+    <!-- 2. 카메라 안내 (한 사람씩) -->
+    <section class="screen" id="s-consent" data-dot="1">
+      <p class="kicker" id="c-kick">甲 손님 차례</p>
+      <h2>먼저 관상을 접수하겠소</h2>
+      <p class="sub">카메라로 얼굴의 비율을 재고, 얼굴의 좋은 점을 읽어 드리겠소.</p>
+      <p class="tiny">얼굴 영상과 사진은 이 화면 안에서만 처리되고, 저장하거나 어디로도 보내지 않아요.</p>
+      <p class="tiny warn" id="photo-msg" role="status" hidden></p>
+      <div class="row">
+        <button class="btn" id="btn-cam" type="button">카메라로 보기</button>
+        <button class="btn ghost small" id="btn-photo" type="button">사진으로 보기</button>
+        <button class="btn ghost small" id="btn-demo" type="button">카메라 없이 체험하기</button>
+      </div>
+      <input type="file" id="photo-input" accept="image/*" hidden>
+    </section>
+
+    <!-- 3. 측정 -->
+    <section class="screen" id="s-scan" data-dot="1">
+      <div class="cam"><video id="video" playsinline muted></video><canvas id="overlay"></canvas><div class="ring" id="ring"></div></div>
+      <div class="msg" id="scan-msg">카메라를 켜는 중…</div>
+      <div class="bar"><i id="scan-bar"></i></div>
+      <div class="row">
+        <button class="link" id="btn-scan-photo" type="button" hidden>사진으로 보기</button>
+        <button class="link" id="btn-scan-demo" type="button" hidden>카메라 없이 체험하기</button>
+        <button class="link" id="btn-scan-cancel" type="button">처음으로</button>
+      </div>
+    </section>
+
+    <!-- 3.5 분석 중 -->
+    <section class="screen" id="s-loading" data-dot="1">
+      <h2>관상을 접수하는 중<span class="ell"></span></h2>
+      <div class="bar"><i id="load-bar"></i></div>
+      <div class="log" id="load-log"></div>
+    </section>
+
+    <!-- 4. 관상 접수 카드 -->
+    <section class="screen" id="s-card" data-dot="1">
+      <p class="kicker" id="card-kick">관상 접수 완료</p>
+      <div class="paper idcard">
+        <div class="stamp">관상<br>접수</div>
+        <div class="face" id="card-face"></div>
+        <div>
+          <div class="who" id="card-who"></div>
+          <div id="card-reads"></div>
+          <span class="sealed">문제별 관상 단서는 추리할 때 공개돼요</span>
+        </div>
+      </div>
+      <button class="btn" id="btn-card-next" type="button">다 음</button>
+    </section>
+
+    <!-- 5. 자리 안내 -->
+    <section class="screen" id="s-turn" data-dot="2">
+      <p class="kicker" id="t-kick"></p>
+      <div class="paper turn">
+        <p class="big" id="t-big"></p>
+        <p class="sub" id="t-sub"></p>
+      </div>
+      <button class="btn" id="btn-turn" type="button">준비됐어요</button>
+    </section>
+
+    <!-- 6. 비밀 답 -->
+    <section class="screen" id="s-secret" data-dot="2">
+      <p class="qhead" id="sec-head"></p>
+      <h2 class="qtitle" id="sec-title"></h2>
+      <p class="qask" id="sec-ask"></p>
+      <div class="choices" id="sec-choices"></div>
+      <p class="tiny">내가 고른 답은 상대가 볼 수 없어요. 답은 기록되지 않아요.</p>
+    </section>
+
+    <!-- 7. 추리 -->
+    <section class="screen" id="s-guess" data-dot="3">
+      <p class="qhead" id="g-head"></p>
+      <div class="guessbox">
+        <div class="face" id="g-face"></div>
+        <div class="tx">
+          <h2 class="qtitle" id="g-title"></h2>
+          <p class="qask" id="g-ask"></p>
+          <span class="clue" id="g-clue"></span>
+        </div>
+      </div>
+      <div class="choices" id="g-choices"></div>
+      <p class="tiny">상대는 표정으로 힌트를 주면 안 돼요.</p>
+    </section>
+
+    <!-- 8. 공개 -->
+    <section class="screen" id="s-reveal" data-dot="4">
+      <p class="kicker" id="rv-kick"></p>
+      <h2 id="rv-title"></h2>
+      <div class="table" id="rv-table"></div>
+      <p class="sumline" id="rv-sum"></p>
+      <button class="btn" id="btn-rv-next" type="button">다 음</button>
+    </section>
+
+    <!-- 9. 결과 -->
+    <section class="screen" id="s-final" data-dot="4">
+      <p class="kicker">結 果</p>
+      <div class="final">
+        <div class="score" id="sc-h"><div class="n">0<small> / 10</small></div><div class="l">사람이 맞힌 수</div></div>
+        <div class="score" id="sc-l"><div class="n">0<small> / 10</small></div><div class="l">관상이 가리킨 쪽이 맞은 수</div></div>
+      </div>
+      <p class="verdict" id="verdict"></p>
+      <p class="fine" id="fine1"></p>
+      <p class="fine" id="fine2"></p>
+      <div class="row"><button class="btn" id="btn-again" type="button">한 판 더</button></div>
+    </section>
+  </main>
+
+  <footer class="foot">얼굴 영상은 이 화면에서만 쓰고 저장하지 않아요. 이름과 답은 기록되지 않고, 맞힌 횟수만 숫자로 모아요.</footer>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script src="vendor/face_mesh/face_mesh.js"></script>
+<script src="js/face-features.js"></script>
+<script src="js/psych-core.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
